@@ -41,6 +41,7 @@ namespace Tweet_Book
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tweetbook", Version = "v1" });
             });
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +76,7 @@ namespace Tweet_Book
                 //    pattern: "{controller=Home}/{action=Index}/{id?}");
                 //endpoints.MapRazorPages();
             });
+            app.UseHealthChecks("/");
         }
     }
 }
