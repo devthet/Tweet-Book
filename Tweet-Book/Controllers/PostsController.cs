@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tweet_Book.Services;
 using Tweetbook.Contracts.v1;
 using Tweetbook.Contracts.v1.Requests;
 using Tweetbook.Contracts.v1.Responses;
@@ -12,31 +13,42 @@ namespace Tweetbook.Controllers
 {
     public class PostsController : Controller
     {
-        private List<Post> _posts;
-        public PostsController()
+        private readonly IPostService _postService;
+       
+        public PostsController(IPostService postService)
         {
-            _posts = new List<Post>();
-           for(int i = 0; i < 5; i++)
-            {
-                _posts.Add(new Post { Id = Guid.NewGuid().ToString() });
-            }
+            _postService = postService;
         }
+
         [HttpGet(ApiRoutes.Posts.GetAll)]
         public IActionResult Posts()
         {
-            return Ok(_posts);
+            return Ok(_postService.GetPosts());
+        }
+        [HttpGet(ApiRoutes.Posts.Get)]
+        public IActionResult Get([FromRoute]Guid postId )
+        {
+            // var post = _posts.SingleOrDefault(x => x.Id == postId);
+            var post = _postService.GetPostById(postId);
+            if (post == null) 
+                return NotFound();
+            
+            return Ok(post);
         }
         [HttpPost(ApiRoutes.Posts.Create)]
         public IActionResult Posts([FromForm]PostRequest postrequest)
         {
             var post = new Post{ Id= postrequest.Id  };
-            if(String.IsNullOrEmpty(post.Id))
+            if(Guid.Empty == post.Id)
             {
-                post.Id = Guid.NewGuid().ToString();
+                post.Id = Guid.NewGuid();
+                post.Name = "new post";
             }
-            _posts.Add(post);
+            //  _posts.Add(post);
+            _postService.GetPosts().Add(post);
+          
             var baseUri = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
-            var locationUri = baseUri +"/"+ ApiRoutes.Posts.Get.Replace("{postId}", post.Id);
+            var locationUri = baseUri +"/"+ ApiRoutes.Posts.Get.Replace("{postId}", post.Id.ToString());
             var postResponse = new PostResponse { Id= post.Id };
             return Created(locationUri, postResponse);
         }
