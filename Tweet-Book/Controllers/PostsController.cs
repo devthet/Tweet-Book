@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tweet_Book.Contracts.v1.Requests;
 using Tweet_Book.Services;
 using Tweetbook.Contracts.v1;
 using Tweetbook.Contracts.v1.Requests;
@@ -34,6 +35,33 @@ namespace Tweetbook.Controllers
                 return NotFound();
             
             return Ok(post);
+        }
+        [HttpPut(ApiRoutes.Posts.Update)]
+        public IActionResult Update([FromRoute] Guid postId,[FromBody]UpdatePostRequest request )
+        {
+
+            var post = new Post
+            {
+                Id = postId,
+                Name = request.Name
+            };
+            var updated = _postService.UpdatePost(post);
+            if (updated)
+                return Ok(post);
+            else
+                return NotFound();
+
+          
+        }
+        [HttpDelete(ApiRoutes.Posts.Delete)]
+        public IActionResult Delete([FromRoute] Guid postId)
+        {
+
+            var deleted = _postService.DeletePost(postId);
+            if (deleted) return NoContent();
+
+            return NotFound();
+
         }
         [HttpPost(ApiRoutes.Posts.Create)]
         public IActionResult Posts([FromForm]PostRequest postrequest)
