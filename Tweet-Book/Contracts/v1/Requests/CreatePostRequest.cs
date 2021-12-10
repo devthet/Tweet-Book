@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Tweetbook.Domain
+namespace Tweet_Book.Contracts.v1.Requests
 {
-    public class Post
+    public class CreatePostRequest
     {
-        [Key]
-        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }

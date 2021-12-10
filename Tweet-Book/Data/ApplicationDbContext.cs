@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Tweetbook.Domain;
 
 namespace Tweet_Book.Data
 {
@@ -12,5 +13,6 @@ namespace Tweet_Book.Data
             : base(options)
         {
         }
+        public DbSet<Post> Posts { get; set; }
     }
 }
