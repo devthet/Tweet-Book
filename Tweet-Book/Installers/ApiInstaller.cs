@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tweet_Book.Options;
+using Tweet_Book.Services;
 
 namespace Tweet_Book.Installers
 {
@@ -19,6 +20,7 @@ namespace Tweet_Book.Installers
             var jwtSettings = new JwtSettings();
             configuration.Bind(nameof(jwtSettings), jwtSettings);
             services.AddSingleton(jwtSettings);
+            services.AddScoped<IIdentityService, IdentityService>();
 
 
             //services.AddControllersWithViews();
@@ -52,6 +54,7 @@ namespace Tweet_Book.Installers
                 //{
                 //    {"Bearer", new string[0] }
                 //};
+               
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description="JWT Authorization header using thet Bearer Scheme",
@@ -60,7 +63,9 @@ namespace Tweet_Book.Installers
                     Type = SecuritySchemeType.ApiKey
                 });
                 //c.AddSecurityRequirement(security);
-                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
                     {
                         {
                           new OpenApiSecurityScheme
@@ -70,8 +75,8 @@ namespace Tweet_Book.Installers
                                 Type = ReferenceType.SecurityScheme,
                                 Id = "Bearer"
                               },
-                              Scheme = "oauth2",
-                              Name = "Bearer",
+                              Scheme = "bearer",
+                              Name = "JWT Authentication",
                               In = ParameterLocation.Header,
 
                             },

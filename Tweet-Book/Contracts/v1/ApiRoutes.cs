@@ -19,5 +19,10 @@ namespace Tweetbook.Contracts.v1
             public const string Delete = baseUrl + "posts/{postId}";
             
         }
+        public static class Identity
+        {
+            public const string Login = baseUrl + "identity/login";
+            public const string Register = baseUrl + "identity/register";
+        }
     }
 }
