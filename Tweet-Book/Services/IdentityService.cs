@@ -23,6 +23,8 @@ namespace Tweet_Book.Services
             _jwtSettings = jwtSettings;
         }
 
+       
+
         public async Task<AuthenticationResult> RegisterAsync(string email, string password)
         {
             var existingUser = await _userManager.FindByEmailAsync(email);
@@ -33,6 +35,15 @@ namespace Tweet_Book.Services
                     Errors = new[] { "User with this email address already exists " }
                 };
             }
+            //var userHasValidPassword = await _userManager.CheckPasswordAsync(user, password);
+            //if (!userHasValidPassword)
+            //{
+            //    return new AuthenticationResult
+            //    {
+            //        Errors = new[] { "User/Password combination is wrong " }
+            //    };
+            //}
+
             var newUser = new IdentityUser
             {
                 Email = email,
@@ -46,6 +57,31 @@ namespace Tweet_Book.Services
                     Errors = createdUser.Errors.Select(x => x.Description)
                 };
             }
+            return GenerateAuthenticationResultForUser(newUser);
+        }
+        public async Task<AuthenticationResult> LoginAsync(string email, string password)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "User does not exists " }
+                };
+            }
+            var userHasValidPassword = await _userManager.CheckPasswordAsync(user, password);
+            if (!userHasValidPassword)
+            {
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "User/Password combination is wrong " }
+                };
+            }
+            return GenerateAuthenticationResultForUser(user);
+        }
+
+        private AuthenticationResult GenerateAuthenticationResultForUser(IdentityUser newUser)
+        {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -58,9 +94,9 @@ namespace Tweet_Book.Services
                         new Claim(JwtRegisteredClaimNames.Email,newUser.Email),
                         new Claim("id",newUser.Id)
                     }),
-                  Expires=DateTime.UtcNow.AddHours(2),
-                  SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256Signature)
-                
+                Expires = DateTime.UtcNow.AddHours(2),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return new AuthenticationResult
@@ -69,5 +105,7 @@ namespace Tweet_Book.Services
                 Token = tokenHandler.WriteToken(token)
             };
         }
+
+       
     }
 }
