@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Tweet_Book.Contracts.v1.Requests;
 using Tweet_Book.Data;
+using Tweet_Book.Extensions;
 using Tweet_Book.Services;
 using Tweetbook.Contracts.v1;
 using Tweetbook.Contracts.v1.Requests;
@@ -45,12 +46,18 @@ namespace Tweetbook.Controllers
         [HttpPut(ApiRoutes.Posts.Update)]
         public async Task<IActionResult> Update([FromRoute] Guid postId,[FromBody]UpdatePostRequest request )
         {
-
-            var post = new Post
+            var userOwnPost = await _postService.UserOwnPostAsync(postId, HttpContext.GetUserId());
+            if (!userOwnPost)
             {
-                Id = postId,
-                Name = request.Name
-            };
+                return BadRequest(new { error="You do not own this post" });
+            }
+            var post = await _postService.GetPostByIdAsync(postId);
+            post.Name = request.Name;
+            //var post = new Post
+            //{
+            //    Id = postId,
+            //    Name = request.Name
+            //};
             var updated = await _postService.UpdatePostAsync(post);
             if (updated)
                 return Ok(post);
@@ -62,6 +69,11 @@ namespace Tweetbook.Controllers
         [HttpDelete(ApiRoutes.Posts.Delete)]
         public async Task<IActionResult> Delete([FromRoute] Guid postId)
         {
+            var userOwnPost = await _postService.UserOwnPostAsync(postId, HttpContext.GetUserId());
+            if (!userOwnPost)
+            {
+                return BadRequest(new { error = "You do not own this post" });
+            }
 
             var deleted = await _postService.DeletePostAsync(postId);
             if (deleted) return NoContent();
@@ -72,7 +84,10 @@ namespace Tweetbook.Controllers
         [HttpPost(ApiRoutes.Posts.Create)]
         public async Task<IActionResult> Create([FromForm]CreatePostRequest postrequest)
         {
-            var post = new Post{ Name= postrequest.Name  };
+            var post = new Post {
+                Name = postrequest.Name,
+                UserId = HttpContext.GetUserId()
+            };
             //if(Guid.Empty == post.Id)
             //{
             //    post.Id = Guid.NewGuid();
