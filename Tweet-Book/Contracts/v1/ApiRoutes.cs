@@ -23,6 +23,7 @@ namespace Tweetbook.Contracts.v1
         {
             public const string Login = baseUrl + "identity/login";
             public const string Register = baseUrl + "identity/register";
+            public const string Refresh = baseUrl + "identity/refresh";
         }
     }
 }

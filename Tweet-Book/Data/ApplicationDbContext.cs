@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Tweet_Book.Domain;
 using Tweetbook.Domain;
 
 namespace Tweet_Book.Data
@@ -14,5 +15,6 @@ namespace Tweet_Book.Data
         {
         }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }
