@@ -22,7 +22,7 @@ namespace Tweet_Book.IntegrationTests
             await AuthenticateAsync();
 
             //Act
-            var response = await TestClient.GetAsync(ApiRoutes.Posts.GetAll) ;
+            var response = await TestClient.GetAsync(ApiRoutes.Posts.GetAll);
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -34,7 +34,7 @@ namespace Tweet_Book.IntegrationTests
             //Arrange
             await AuthenticateAsync();
             var createPost = await CreatePostAsync(new CreatePostRequest
-            { 
+            {
                 Name = "Test Post"
             });
 

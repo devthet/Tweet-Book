@@ -16,9 +16,11 @@ using Tweetbook.Contracts.v1.Responses;
 
 namespace Tweet_Book.IntegrationTests
 {
-    public class IntegrationTest
+   // public class IntegrationTest:IDisposable
+     public class IntegrationTest 
     {
         protected readonly HttpClient TestClient;
+        //private readonly IServiceProvider _serviceProvider;
         public IntegrationTest()
         {
             var appFactory = new WebApplicationFactory<Startup>()
@@ -30,7 +32,7 @@ namespace Tweet_Book.IntegrationTests
                         //services.RemoveAll<DbContextOptions<ApplicationDbContext>>();
                         services.AddDbContext<ApplicationDbContext>(options =>
                         {
-                            options.UseInMemoryDatabase("TestDb");
+                            options.UseInMemoryDatabase("TestDb2");
                         });
                         //var descriptor = services.SingleOrDefault(d =>
                         //    d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
@@ -46,8 +48,17 @@ namespace Tweet_Book.IntegrationTests
                         //});
                     });
                 });
+           // _serviceProvider = appFactory.Services;
             TestClient = appFactory.CreateClient();
         }
+
+        //public void Dispose()
+        //{
+        //    using var serviceScope = _serviceProvider.CreateScope();
+        //    var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+        //    context.Database.EnsureDeleted();
+        //}
+
         protected async Task AuthenticateAsync()
         {
             TestClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", await GetJwtAsync());
@@ -63,8 +74,8 @@ namespace Tweet_Book.IntegrationTests
         private async Task<string> GetJwtAsync()
         {
             var response = await TestClient.PostAsJsonAsync(ApiRoutes.Identity.Register,new UserRegistrationRequest { 
-                Email = "test@integration.com",
-                Password = "Test1234!"
+                Email = "tester3@tester.com",
+                Password = "Tester1234!"
             });
             //var registrationResponse = await response.Content.ReadAsAsync<AuthSuccessResponse>();
             var registrationResponse = await response.Content.ReadAsAsync<AuthSuccessResponse>();
