@@ -25,5 +25,10 @@ namespace Tweetbook.Contracts.v1
             public const string Register = baseUrl + "identity/register";
             public const string Refresh = baseUrl + "identity/refresh";
         }
+
+        public static class Tags
+        {
+            public const string GetAll = baseUrl + "tags/getall";
+        }
     }
 }

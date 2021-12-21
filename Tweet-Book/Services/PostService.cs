@@ -84,5 +84,10 @@ namespace Tweet_Book.Services
             if (post.UserId != userId) return false;
             return true;
         }
+
+        public async Task GetAllTagsAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

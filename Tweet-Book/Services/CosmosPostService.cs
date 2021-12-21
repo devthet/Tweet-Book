@@ -18,6 +18,11 @@ namespace Tweet_Book.Services
             throw new NotImplementedException();
         }
 
+        public Task GetAllTagsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Post> GetPostByIdAsync(Guid postId)
         {
             throw new NotImplementedException();
