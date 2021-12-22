@@ -50,10 +50,11 @@ namespace Tweet_Book.Installers
                 x.SaveToken = true;
                 x.TokenValidationParameters = tokenValidationParameters;
             });
-            services.AddAuthorization(options=>
-            {
-                options.AddPolicy("TagViewer",builder=>builder.RequireClaim("tags.view","true"));
-            });
+            //services.AddAuthorization(options=>
+            //{
+            //    options.AddPolicy("TagViewer",builder=>builder.RequireClaim("tags.view","true"));
+            //});
+            services.AddAuthorization();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tweetbook", Version = "v1" });

@@ -156,11 +156,38 @@ namespace Tweet_Book.Services
                     {
                         new Claim(JwtRegisteredClaimNames.Sub,user.Email),
                         new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                       // new Claim(ClaimTypes.Role, user.UserName),
                         new Claim(JwtRegisteredClaimNames.Email,user.Email),
                         new Claim("id",user.Id)
                     };
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            foreach (var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+
             var userClaim = await _userManager.GetClaimsAsync(user);
             claims.AddRange(userClaim);
+
+            
+            // var userRoles = await _userManager.GetRolesAsync(user);
+            //foreach (var userRole in userClaim)
+            //{
+            //    claims.Add(new Claim(ClaimTypes.Role, userRole));
+            //    var role = await _roleManager.FindByNameAsync(userRole);
+            //    if (role == null) continue;
+            //    var roleClaims = await _roleManager.GetClaimsAsync(role);
+
+            //    foreach (var roleClaim in roleClaims)
+            //    {
+            //        if (claims.Contains(roleClaim))
+            //            continue;
+
+            //        claims.Add(roleClaim);
+            //    }
+            //}
 
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor

@@ -29,6 +29,9 @@ namespace Tweetbook.Contracts.v1
         public static class Tags
         {
             public const string GetAll = baseUrl + "tags/getall";
+            public const string Get = baseUrl + "tags/{tagName}";
+            public const string Create = baseUrl + "tags";
+            public const string Delete = baseUrl + "tags/{tagName}";
         }
     }
 }

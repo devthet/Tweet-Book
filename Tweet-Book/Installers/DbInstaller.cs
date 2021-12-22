@@ -21,9 +21,12 @@ namespace Tweet_Book.Installers
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-           // services.AddSingleton<IPostService, PostService>();
-           services.AddScoped<IPostService, PostService>();
+            // services.AddSingleton<IPostService, PostService>();
+            services.AddSingleton<ITagSerivce, TagService>();
+            services.AddScoped<IPostService, PostService>();
+
         }
     }
 }

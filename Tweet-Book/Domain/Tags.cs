@@ -8,16 +8,19 @@ using Tweetbook.Domain;
 
 namespace Tweet_Book.Domain
 {   
-    public class Tags
+    public class Tag
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; }
-        public string Tag { get; set; }
-        public string TagName { get; set; }
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //public Guid TagId { get; set; }
+        public Guid CreatorId { get; set; }
+        //public string TagName { get; set; }
+        public string Name { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
 
-        public string PostId { get; set; }
-        [ForeignKey(nameof(PostId))]
-        public Post Post { get; set; }
+        //public string PostId { get; set; }
+        //[ForeignKey(nameof(PostId))]
+        //public Post Post { get; set; }
     }
 }
