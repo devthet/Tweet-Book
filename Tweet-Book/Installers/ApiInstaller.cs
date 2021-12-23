@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tweet_Book.Authorization;
 using Tweet_Book.Options;
 using Tweet_Book.Services;
 
@@ -54,7 +56,12 @@ namespace Tweet_Book.Installers
             //{
             //    options.AddPolicy("TagViewer",builder=>builder.RequireClaim("tags.view","true"));
             //});
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+             options.AddPolicy("MustWorkForChapsas", policy => {
+                policy.AddRequirements(new WorksForCompanyRequirement("chapsas.com"));
+            })
+            );
+            services.AddSingleton<IAuthorizationHandler, WorkForCompanyHandler>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tweetbook", Version = "v1" });

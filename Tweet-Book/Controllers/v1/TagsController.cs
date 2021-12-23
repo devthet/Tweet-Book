@@ -14,7 +14,8 @@ using Tweetbook.Contracts.v1;
 
 namespace Tweet_Book.Controllers.v1
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles ="Admin,Poster")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles ="Admin,Poster")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TagsController : Controller
     {
         private readonly IPostService _postService;
@@ -56,7 +57,8 @@ namespace Tweet_Book.Controllers.v1
         }
 
         [HttpDelete(ApiRoutes.Tags.Delete)]
-        [Authorize(Roles ="Admin")]
+        //[Authorize(Roles ="Admin")]
+        [Authorize(Policy = "MustWorkForChapsas")]
         public IActionResult Delete([FromRoute] string tagName)
         {
             var deleted = _tagSerivce.DeleteTag(tagName);
