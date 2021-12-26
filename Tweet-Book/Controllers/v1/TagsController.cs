@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,49 +20,70 @@ namespace Tweet_Book.Controllers.v1
     public class TagsController : Controller
     {
         private readonly IPostService _postService;
-        private readonly ITagSerivce _tagSerivce;
+        private readonly IMapper _mapper;
 
-        public TagsController(IPostService postService,ITagSerivce tagSerivce)
+        //private readonly ITagSerivce _tagSerivce;
+
+        public TagsController(IPostService postService,IMapper mapper)
         {
             _postService = postService;
-            _tagSerivce = tagSerivce;
+            _mapper = mapper;
+            // _tagSerivce = tagSerivce;
         }
         [HttpGet(ApiRoutes.Tags.GetAll)]
         //[Authorize(Policy = "TagViewer")]
-        public  IActionResult GetAllTags()
+        public async Task<IActionResult> GetAllTags()
         {
-            return Ok(_tagSerivce.GetTags());
+            //return Ok(_tagSerivce.GetTags());
+            var tags = await _postService.GetAllTagsAsync();
+            //var tagsResponse = tags.Select(x => new TagResponse { Name = x.TagName }).ToList();
+            var tagsResponse = _mapper.Map<List<TagResponse>>(tags);
+            return Ok(tagsResponse);
         }
         [HttpGet(ApiRoutes.Tags.Get,Name ="Get")]
-        public IActionResult GetById([FromRoute]string tagName)
+        public async  Task<IActionResult> Get([FromRoute]string tagName)
         {
-            var tag = _tagSerivce.GetTagById(tagName);
+            var tag = await _postService.GetTagByNameAsync(tagName);
             if (tag == null) return NotFound();
-            return Ok(tag);
+            //return Ok(new TagResponse { Name = tag.TagName });
+            return Ok(_mapper.Map<TagResponse>(tag));
+
+
+            //var tag =  _tagSerivce.GetTagById(tagName);
+            //if (tag == null) return NotFound();
+            //return Ok(tag);
         }
         [HttpPost(ApiRoutes.Tags.Create)]
-        [ProducesResponseType(typeof(TagResponse),(int)HttpStatusCode.OK)]
-        public IActionResult CreateTag([FromBody]TagRequest tagRequest)
+        [ProducesResponseType(typeof(TagResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> CreateTag([FromBody] CreateTagRequest Request)
         {
             //if (Guid.Empty == tagRequest.TagId)
             //{
             //    tagRequest.TagId = Guid.NewGuid();
             //}
-            var tag = new Tag { CreatorId = Guid.NewGuid(), Name= tagRequest.TagName ,CreatedOn=DateTime.Now};
-            //tags.Add(tag);
-            _tagSerivce.CreateTag(tag);
 
-            var response = new TagResponse { TagName = tag.Name };
-             return CreatedAtRoute("Get",new {tagId= response.TagId }, response);
-           // return Ok(response);
+            var tag = new Tag
+            {
+                CreatorId = Guid.NewGuid(),
+                TagName = Request.Name,
+                CreatedOn = DateTime.Now
+            };
+            //tags.Add(tag);
+            var created = await _postService.CreateTagAsync(tag);
+            if (!created) return BadRequest(new { error = "Enable to create tag" });
+
+            //var response = new TagResponse { Name = tag.TagName };
+            var response = _mapper.Map<TagResponse>(tag);
+            return CreatedAtRoute("Get", new { tagName = response.Name }, response);
+            // return Ok(response);
         }
 
         [HttpDelete(ApiRoutes.Tags.Delete)]
         //[Authorize(Roles ="Admin")]
         [Authorize(Policy = "MustWorkForChapsas")]
-        public IActionResult Delete([FromRoute] string tagName)
+        public async  Task<IActionResult> Delete([FromRoute] string tagName)
         {
-            var deleted = _tagSerivce.DeleteTag(tagName);
+            var deleted = await _postService.DeleteTagAsync(tagName);
             if (deleted) return NoContent();
             return NotFound();
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tweet_Book.Domain;
 using Tweetbook.Domain;
 
 namespace Tweet_Book.Services
@@ -14,7 +15,12 @@ namespace Tweet_Book.Services
         Task<bool> UpdatePostAsync(Post postToUpdate);
         Task<bool> DeletePostAsync(Guid postId);
         Task<bool> UserOwnPostAsync(Guid postId, string userId);
-
-        Task GetAllTagsAsync();
+        Task<List<Tag>> GetAllTagsAsync();
+        Task<Tag> GetTagByNameAsync(string tagName);
+        Task AddNewTag(Post post);
+        Task<bool> CreateTagAsync(Tag tag);
+        Task<bool> UpdateTagAsync(Tag tagToUpdate);
+        Task<bool> DeleteTagAsync(string tagName);
+        //Task GetAllTagsAsync();
     }
 }

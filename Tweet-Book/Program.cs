@@ -24,8 +24,8 @@ namespace Tweet_Book
             var host = CreateHostBuilder(args).Build();
             using(var serviceScope = host.Services.CreateScope())
             {
-                var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                await dbContext.Database.MigrateAsync();
+                //var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                //await dbContext.Database.MigrateAsync();
 
                 var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 if (!await roleManager.RoleExistsAsync("Admin"))

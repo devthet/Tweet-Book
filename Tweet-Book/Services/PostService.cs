@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tweet_Book.Data;
+using Tweet_Book.Domain;
 using Tweetbook.Domain;
 
 namespace Tweet_Book.Services
@@ -29,25 +30,31 @@ namespace Tweet_Book.Services
         {
             _dataContext = dataContext;
         }
-
-        
-
-       
-
         public async Task<List<Post>> GetPostsAsync()
         {
             // return _posts;
-            return await _dataContext.Posts.ToListAsync();
+            // return await _dataContext.Posts.ToListAsync();
+            return await _dataContext.Posts
+                 .Include(x => x.Tags).ToListAsync();
+               
         }
         public async Task<Post> GetPostByIdAsync(Guid postId)
         {
             // return  _posts.SingleOrDefault(x => x.Id == postId);
-            return await _dataContext.Posts.SingleOrDefaultAsync(x => x.Id == postId);
+            //return await _dataContext.Posts.SingleOrDefaultAsync(x => x.Id == postId);
+            return await _dataContext.Posts
+                .Include(x => x.Tags)
+                .SingleOrDefaultAsync(x => x.Id == postId);
         }
 
         public async Task<bool> CreatePostAsync(Post post)
         {
-           await _dataContext.Posts.AddAsync(post);
+            //await _dataContext.Posts.AddAsync(post);
+            // var created = await _dataContext.SaveChangesAsync();
+            // return created > 0;
+            post.Tags?.ForEach(x => x.TagName = x.TagName.ToLower());
+            await AddNewTag(post);
+            await _dataContext.Posts.AddAsync(post);
             var created = await _dataContext.SaveChangesAsync();
             return created > 0;
 
@@ -59,6 +66,8 @@ namespace Tweet_Book.Services
             //if (!exists) return false;
             //var index = _posts.findindex(x => x.id == posttoupdate.id);
             //_posts[index] = postToUpdate;
+            postToUpdate.Tags?.ForEach(x => x.TagName = x.TagName.ToLower());
+           // await AddNewTag(postToUpdate);
             _dataContext.Posts.Update(postToUpdate);
             var updated = await _dataContext.SaveChangesAsync();
             // return true;
@@ -85,7 +94,68 @@ namespace Tweet_Book.Services
             return true;
         }
 
-        public async Task GetAllTagsAsync()
+       
+
+        public async Task<List<Tag>> GetAllTagsAsync()
+        {
+           // throw new NotImplementedException();
+          return await _dataContext.Tags.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<Tag> GetTagByNameAsync(string name)
+        {
+            //throw new NotImplementedException();
+            return await _dataContext.Tags.SingleOrDefaultAsync(x => x.TagName == name);
+        }
+
+        public async Task AddNewTag(Post post)
+        {
+            foreach(var tags in post.Tags)
+            {
+                var tag = new Tag
+                {
+                    TagName = tags.TagName,
+                    CreatorId = Guid.NewGuid(),
+                    CreatedOn = DateTime.Now,
+                    CreatedBy = post.Name
+
+                };
+                await _dataContext.Tags.AddAsync(tag);
+                await _dataContext.SaveChangesAsync();
+            }
+            
+           
+        }
+
+        public async Task<bool> CreateTagAsync(Tag tag)
+        {
+            // throw new NotImplementedException();
+            await _dataContext.Tags.AddAsync(tag);
+            var created = await _dataContext.SaveChangesAsync();
+            return created > 0;
+
+        }
+
+        public  async Task<bool> UpdateTagAsync(Tag tagToUpdate)
+        {
+            // throw new NotImplementedException();
+            _dataContext.Tags.Update(tagToUpdate);
+            var updated = await _dataContext.SaveChangesAsync();
+            // return true;
+            return updated > 0;
+        }
+
+        public async Task<bool> DeleteTagAsync(string tagName)
+        {
+            // throw new NotImplementedException();
+            var tag = await GetTagByNameAsync(tagName);
+            if (tag == null) return false;
+            _dataContext.Tags.Remove(tag);
+            var deleted = await _dataContext.SaveChangesAsync();
+            return deleted > 0;
+        }
+
+        public Task<List<Tag>> GetTagsAsync()
         {
             throw new NotImplementedException();
         }

@@ -12,8 +12,8 @@ namespace Tweet_Book.Services
         public TagService()
         {
             tags = new List<Tag>();
-            tags.Add(new Tag { CreatorId = Guid.NewGuid(), Name = "Tag1",CreatedOn=DateTime.Now});
-            tags.Add(new Tag { CreatorId = Guid.NewGuid(), Name = "Tag2", CreatedOn = DateTime.Now });
+            tags.Add(new Tag { CreatorId = Guid.NewGuid(), TagName = "Tag1",CreatedOn=DateTime.Now});
+            tags.Add(new Tag { CreatorId = Guid.NewGuid(), TagName = "Tag2", CreatedOn = DateTime.Now });
         }
 
         public List<Tag> GetTags()
@@ -23,7 +23,7 @@ namespace Tweet_Book.Services
 
         public Tag GetTagById(string tagName)
         {
-            var tag = tags.SingleOrDefault(x => x.Name == tagName);
+            var tag = tags.SingleOrDefault(x => x.TagName == tagName);
             return tag;
         }
         public Tag CreateTag(Tag tag)

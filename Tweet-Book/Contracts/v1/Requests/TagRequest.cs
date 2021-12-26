@@ -8,6 +8,6 @@ namespace Tweet_Book.Contracts.v1.Requests
     public class TagRequest
     {
         //public Guid TagId { get; set; }
-        public string TagName { get; set; }
+        public string Name { get; set; }
     }
 }

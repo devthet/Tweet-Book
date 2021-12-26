@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Tweet_Book.Domain;
 
 namespace Tweetbook.Domain
 {
@@ -17,5 +18,7 @@ namespace Tweetbook.Domain
 
         [ForeignKey(nameof(UserId))]
         public IdentityUser User { get; set; }
+
+        public virtual List<PostTag> Tags { get; set; }
     }
 }

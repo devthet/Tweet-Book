@@ -13,14 +13,20 @@ namespace Tweet_Book.Domain
         //[Key]
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         //public Guid TagId { get; set; }
+      
+        [Key]
+        public string TagName { get; set; }
+        //public Guid TagId { get; set; }
         public Guid CreatorId { get; set; }
-        //public string TagName { get; set; }
-        public string Name { get; set; }
+        
+       // public string Name { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
+        public virtual List<PostTag> Tags { get; set; }
 
-        //public string PostId { get; set; }
         //[ForeignKey(nameof(PostId))]
+        //public Guid PostId { get; set; }
+        
         //public Post Post { get; set; }
     }
 }

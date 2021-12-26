@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace Tweet_Book.Contracts.v1.Requests
 {
-    public class CreatePostRequest
+    public class CreateTagRequest
     {
         public string Name { get; set; }
-       // public string UserId { get; set; }
-        public IEnumerable<TagRequest> Tags { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }

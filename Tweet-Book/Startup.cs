@@ -31,6 +31,7 @@ namespace Tweet_Book
         {
 
             services.InstallServicesAssembly(Configuration);
+            services.AddAutoMapper(typeof(Startup));
            
         }
 
