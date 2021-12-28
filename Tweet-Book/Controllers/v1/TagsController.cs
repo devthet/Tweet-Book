@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Tweet_Book.Controllers.v1
 {
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles ="Admin,Poster")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class TagsController : Controller
+    public class TagsController : ControllerBase
     {
         private readonly IPostService _postService;
         private readonly IMapper _mapper;
@@ -36,8 +37,8 @@ namespace Tweet_Book.Controllers.v1
         {
             //return Ok(_tagSerivce.GetTags());
             var tags = await _postService.GetAllTagsAsync();
-            //var tagsResponse = tags.Select(x => new TagResponse { Name = x.TagName }).ToList();
-            var tagsResponse = _mapper.Map<List<TagResponse>>(tags);
+            var tagsResponse = tags.Select(x => new TagResponse { Name = x.TagName }).ToList();
+           // var tagsResponse = _mapper.Map<List<TagResponse>>(tags);
             return Ok(tagsResponse);
         }
         [HttpGet(ApiRoutes.Tags.Get,Name ="Get")]
@@ -54,12 +55,18 @@ namespace Tweet_Book.Controllers.v1
             //return Ok(tag);
         }
         [HttpPost(ApiRoutes.Tags.Create)]
-        [ProducesResponseType(typeof(TagResponse), (int)HttpStatusCode.OK)]
+        //[ProducesResponseType(typeof(TagResponse), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateTag([FromBody] CreateTagRequest Request)
         {
             //if (Guid.Empty == tagRequest.TagId)
             //{
             //    tagRequest.TagId = Guid.NewGuid();
+            //}
+            //if (!ModelState.IsValid)
+            //{
+
             //}
 
             var tag = new Tag
@@ -72,8 +79,8 @@ namespace Tweet_Book.Controllers.v1
             var created = await _postService.CreateTagAsync(tag);
             if (!created) return BadRequest(new { error = "Enable to create tag" });
 
-            //var response = new TagResponse { Name = tag.TagName };
-            var response = _mapper.Map<TagResponse>(tag);
+            var response = new TagResponse { Name = tag.TagName };
+           // var response = _mapper.Map<TagResponse>(tag);
             return CreatedAtRoute("Get", new { tagName = response.Name }, response);
             // return Ok(response);
         }

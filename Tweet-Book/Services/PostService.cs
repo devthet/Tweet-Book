@@ -99,7 +99,8 @@ namespace Tweet_Book.Services
         public async Task<List<Tag>> GetAllTagsAsync()
         {
            // throw new NotImplementedException();
-          return await _dataContext.Tags.AsNoTracking().ToListAsync();
+          //return await _dataContext.Tags.AsNoTracking().ToListAsync();
+          return await _dataContext.Tags.ToListAsync();
         }
 
         public async Task<Tag> GetTagByNameAsync(string name)
