@@ -61,7 +61,19 @@ namespace Tweetbook.Controllers
             //});
             return Ok(_mapper.Map<PostResponse>(post));
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        ///     Sample **request**:
+        ///     Post /api/v1/posts
+        ///     {
+        ///         "name":"some name"
+        ///     }
+        /// </remarks>
+        /// <param name="postrequest"></param>
+        /// <returns></returns>
         [HttpPost(ApiRoutes.Posts.Create)]
         public async Task<IActionResult> Create([FromBody]CreatePostRequest postrequest)
         {
