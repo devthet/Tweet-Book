@@ -31,4 +31,12 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contracts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tweet-book.Contracts\Tweet-book.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>
