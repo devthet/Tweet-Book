@@ -14,9 +14,13 @@ services:
    - "7000:80"
   depends_on:
    - db-server
+  networks:
+   - localdev
+   - redis
+
 
  db-server:
-  image: mcr.microsoft.com/mssql/server
+  image: mcr.microsoft.com/mssql/server:2019-latest
   container_name: db-server
   environment:
    - ACCEPT_EULA=Y
@@ -25,6 +29,14 @@ services:
    - "1433:1433"
   volumes:
   - sql-volume:/var/opt/mssql
+  networks:
+   - localdev
 
+ redis:
+  image: redis:alpine
+  container_name: redis
+  ports:
+    - "6379:6379"
+  
 volumes:
  sql-volume:

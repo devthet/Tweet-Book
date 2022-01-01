@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tweet_Book.Cache;
 using Tweet_Book.Contracts.v1.Requests;
 using Tweet_Book.Contracts.v1.Responses;
 using Tweet_Book.Domain;
@@ -32,6 +33,7 @@ namespace Tweetbook.Controllers
 
 
         [HttpGet(ApiRoutes.Posts.GetAll)]
+        [Cached(600)]
         public async Task<IActionResult> GetAll()
         {
             var posts = await _postService.GetPostsAsync();
@@ -46,6 +48,7 @@ namespace Tweetbook.Controllers
             return Ok(postResponses);
         }
         [HttpGet(ApiRoutes.Posts.Get)]
+        [Cached(600)]
         public async Task<IActionResult> Get([FromRoute]Guid postId )
         {
             // var post = _posts.SingleOrDefault(x => x.Id == postId);
