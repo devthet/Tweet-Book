@@ -49,6 +49,11 @@ namespace Tweet_Book.Services
             throw new NotImplementedException();
         }
 
+        public Task<List<Post>> GetPostsAsync(PaginationFilter paginationFilter = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<List<Post>> GetTagAsync()
         {
             throw new NotImplementedException();
