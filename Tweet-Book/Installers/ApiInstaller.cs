@@ -77,7 +77,7 @@ namespace Tweet_Book.Installers
 
             });
             // swagger
-            services.AddHealthChecks();
+            //services.AddHealthChecks();
         }
     }
 }

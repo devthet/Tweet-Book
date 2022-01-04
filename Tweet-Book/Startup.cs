@@ -1,19 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Tweet_Book.Data;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Tweet_Book.Installers;
+using Tweet_book.Contracts.HealthChecks;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace Tweet_Book
 {
@@ -51,7 +46,26 @@ namespace Tweet_Book
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-           // app.UseHttpsRedirection();
+            app.UseHealthChecks("/health",new HealthCheckOptions { 
+                ResponseWriter = async(context, report)=>{
+                    context.Response.ContentType = "application/json";
+                    var response = new HealthCheckResponse
+                    {
+                        Status = report.Status.ToString(),
+                        Checks = report.Entries.Select(x=> new HealthCheck
+                        {
+                            Status = x.Value.Status.ToString(),
+                            Component = x.Key,
+                            Description = x.Value.Description
+
+                        }),
+                        Duration = report.TotalDuration
+
+                    };
+                    await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+                }
+            });
+            // app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -67,7 +81,7 @@ namespace Tweet_Book
                 //    pattern: "{controller=Home}/{action=Index}/{id?}");
                 //endpoints.MapRazorPages();
             });
-            app.UseHealthChecks("/");
+            //app.UseHealthChecks("/");
         }
     }
 }
