@@ -46,7 +46,7 @@ namespace Tweet_Book
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHealthChecks("/health",new HealthCheckOptions { 
+            app.UseHealthChecks("/",new HealthCheckOptions { 
                 ResponseWriter = async(context, report)=>{
                     context.Response.ContentType = "application/json";
                     var response = new HealthCheckResponse

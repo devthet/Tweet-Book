@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tweet_book.Contracts.v1.Requests.Queries;
 using Tweet_Book.Data;
 using Tweet_Book.Domain;
 using Tweetbook.Domain;
@@ -30,22 +31,36 @@ namespace Tweet_Book.Services
         {
             _dataContext = dataContext;
         }
-        public async Task<List<Post>> GetPostsAsync(PaginationFilter paginationFilter=null)
+        public async Task<List<Post>> GetPostsAsync(GetAllPostFilter filter =null,PaginationFilter paginationFilter=null)
         {
+            var quarable = _dataContext.Posts.AsQueryable();
+
             // return _posts;
             // return await _dataContext.Posts.ToListAsync();
-            if(paginationFilter == null)
+            if (paginationFilter == null)
             {
-                return await _dataContext.Posts
+                return await quarable
                  .Include(x => x.Tags).ToListAsync();
             }
+            quarable = AddFilterOnQuery(filter, quarable);
             var skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
-            return await _dataContext.Posts
+            return await quarable
                  .Include(x => x.Tags)
                  .Skip(skip).Take(paginationFilter.PageSize)
                  .ToListAsync();
-               
+
         }
+
+        private static IQueryable<Post> AddFilterOnQuery(GetAllPostFilter filter, IQueryable<Post> quarable)
+        {
+            if (!string.IsNullOrEmpty(filter?.UserId))
+            {
+                quarable = quarable.Where(x => x.UserId == filter.UserId);
+            }
+
+            return quarable;
+        }
+
         public async Task<Post> GetPostByIdAsync(Guid postId)
         {
             // return  _posts.SingleOrDefault(x => x.Id == postId);

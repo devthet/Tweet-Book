@@ -13,6 +13,7 @@ namespace Tweet_Book.MappingProfiles
         public RequestToDomainProfile()
         {
             CreateMap<PaginationQuery,PaginationFilter>();
+            CreateMap<GetAllPostsQuery, GetAllPostFilter>();
         }
     }
 }
