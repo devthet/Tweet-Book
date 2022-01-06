@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tweet_book.Contracts.v1.Requests;
 using Tweet_Book.Contracts.v1.Requests;
 using Tweet_Book.Contracts.v1.Responses;
 using Tweet_Book.Services;
@@ -66,6 +67,26 @@ namespace Tweet_Book.Controllers.v1
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
         {
             var authResponse = await _identityService.RefreshTokenAsync(request.Token, request.RefreshToken);
+            if (!authResponse.Success)
+            {
+                return BadRequest(
+                    new AuthFailResponse
+                    {
+                        Errors = authResponse.Errors
+                    }
+                );
+            }
+            return Ok(new AuthSuccessResponse
+            {
+                Token = authResponse.Token,
+                RefreshToken = authResponse.RefreshToken
+
+            });
+        }
+        [HttpPost(ApiRoutes.Identity.FacebookAuth)]
+        public async Task<IActionResult> FacebookAuth([FromBody] UserFacebookAuthRequest request)
+        {
+            var authResponse = await _identityService.LoginWithFacebookAsync(request.AccessToken);
             if (!authResponse.Success)
             {
                 return BadRequest(

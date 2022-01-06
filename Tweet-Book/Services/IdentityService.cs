@@ -21,16 +21,18 @@ namespace Tweet_Book.Services
         private readonly JwtSettings _jwtSettings;
         private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly ApplicationDbContext _dbContext;
+        private readonly IFacebookAuthService _facebookAuthService;
 
-        public IdentityService(UserManager<IdentityUser> userManager,JwtSettings jwtSettings,TokenValidationParameters tokenValidationParameters,ApplicationDbContext dbContext)
+        public IdentityService(UserManager<IdentityUser> userManager, JwtSettings jwtSettings, TokenValidationParameters tokenValidationParameters, ApplicationDbContext dbContext, IFacebookAuthService facebookAuthService = null)
         {
             _userManager = userManager;
             _jwtSettings = jwtSettings;
             _tokenValidationParameters = tokenValidationParameters;
             _dbContext = dbContext;
+            _facebookAuthService = facebookAuthService;
         }
 
-       
+
 
         public async Task<AuthenticationResult> RegisterAsync(string email, string password)
         {
@@ -217,6 +219,38 @@ namespace Tweet_Book.Services
             };
         }
 
-        
+        public async Task<AuthenticationResult> LoginWithFacebookAsync(string accessToken)
+        {
+            var validatedTokenResult = await _facebookAuthService.ValidateAccessTokenAsync(accessToken);
+            if (!validatedTokenResult.Data.IsValid)
+            {
+                return new AuthenticationResult {
+                    Errors = new[] { "Invalid facebook token." }
+                };
+            }
+            var userInfo = await _facebookAuthService.GetUserInfoAsync(accessToken);
+            var user = await _userManager.FindByEmailAsync(userInfo.Email);
+            if(user == null)
+            {
+                
+                    var identityUser = new IdentityUser
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Email = userInfo.Email,
+                        UserName = userInfo.Email
+
+                    };
+               var createdResult=  await _userManager.CreateAsync(identityUser);
+                if (!createdResult.Succeeded)
+                {
+                    return new AuthenticationResult
+                    {
+                        Errors = new[] { "Something went wrong." }
+                    };
+                }
+                return await GenerateAuthenticationResultForUser(identityUser);
+            }
+            return await GenerateAuthenticationResultForUser(user);
+        }
     }
 }

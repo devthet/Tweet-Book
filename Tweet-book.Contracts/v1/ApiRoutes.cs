@@ -24,6 +24,7 @@ namespace Tweetbook.Contracts.v1
             public const string Login = baseUrl + "identity/login";
             public const string Register = baseUrl + "identity/register";
             public const string Refresh = baseUrl + "identity/refresh";
+            public const string FacebookAuth = baseUrl + "identity/auth/fb";
         }
 
         public static class Tags

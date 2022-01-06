@@ -7,11 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tweet-Book", "Tweet-Book\Tw
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tweet-Book.IntegrationTests", "Tweet-Book.IntegrationTests\Tweet-Book.IntegrationTests.csproj", "{32B364B3-7D93-448F-A3DB-257853F97641}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tweet-Book.Sdk", "Tweet-Book.Sdk\Tweet-Book.Sdk.csproj", "{06E6E5B0-268C-4F5C-8CE5-30D373B3744A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tweet-Book.Sdk", "Tweet-Book.Sdk\Tweet-Book.Sdk.csproj", "{06E6E5B0-268C-4F5C-8CE5-30D373B3744A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tweet-book.Contracts", "Tweet-book.Contracts\Tweet-book.Contracts.csproj", "{CCB71B76-7BEB-4F25-BAA7-0A742B91E698}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tweet-book.Contracts", "Tweet-book.Contracts\Tweet-book.Contracts.csproj", "{CCB71B76-7BEB-4F25-BAA7-0A742B91E698}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tweet-book.Sample", "Tweet-book.Sample\Tweet-book.Sample.csproj", "{BF080329-7BFC-4A3A-B634-DE9390B0D94A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tweet-book.Sample", "Tweet-book.Sample\Tweet-book.Sample.csproj", "{BF080329-7BFC-4A3A-B634-DE9390B0D94A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tweet-book.Web", "Tweet-book.Web\Tweet-book.Web.csproj", "{4920F918-A573-48AB-890F-8BC3A221E053}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{BF080329-7BFC-4A3A-B634-DE9390B0D94A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF080329-7BFC-4A3A-B634-DE9390B0D94A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF080329-7BFC-4A3A-B634-DE9390B0D94A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4920F918-A573-48AB-890F-8BC3A221E053}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4920F918-A573-48AB-890F-8BC3A221E053}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4920F918-A573-48AB-890F-8BC3A221E053}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4920F918-A573-48AB-890F-8BC3A221E053}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
